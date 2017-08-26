@@ -1,11 +1,12 @@
 <template>
 <div class="recommend">
-        <div class="recommend-content">
-	        <div  class="slider-wrapper">
+     <scroll class="recommend-content" :data="discList" ref='scroll'>
+          <div>
+	        <div v-if="recommends.length" class="slider-wrapper">
               <slider>
               	<div v-for="item in recommends">
               		<a :href="item.linkUrl">
-              			<img :src="item.picUrl">
+              			<img  @load='loadImage' :src="item.picUrl">
               		</a>
               	</div>
               </slider>
@@ -13,39 +14,67 @@
 	        <div class="recommend-list">
 		        <h1 class="list-title">热门歌单推荐</h1>
 		        <ul>
+		          <li v-for="item in discList" class="item">
+		          	 <div class="icon">
+		          	   <img width="60" height="60" v-lazy="item.picUrl">
+		          	 	
+		          	 </div>
+		          	 <div class="text">
+		          	 	  <h2 class="name" v-html='item.songListAuthor'></h2>
+		          	 	  <p class="desc" v-html='item.songListDesc'></p>
+		          	 </div>
+
+		          </li>
 		        </ul>
 	        </div>
         </div>
-
+        <div class="loading-container" v-show="!discList.length">
+        	 <Loading></Loading>
+        </div>
+       
+  </scroll>
 </div>
     
 </template>
 
 <script type="text/ecmascript-6">
+  import Loading from 'base/loading'
   import Slider from 'base/slider'
+  import Scroll from 'base/scroll'
   import {getRecommend} from 'api/recommend'
   import {ERR_OK} from 'api/config'
   export default {
     data(){
     return {
-    recommends :[ ]
+      recommends :[ ],
+      discList   :[ ]
      }
     },
     created () {
-      this._getRecommend()
+      setTimeout(()=>{ this._getRecommend()
+      },
+      2000)
+     
     },
     methods:{
       _getRecommend() {
         getRecommend().then((res) => {
           if (res.code === ERR_OK) {
             this.recommends=res.data.slider
+            this.discList=res.data.songList
           }
         })
+      },
+      loadImage(){
+      if(!this.Checkloaded){
+       this.$refs.scroll.refresh()
+       this.Checkloaded=true
+      }
       }
 
   },
   components:{
-    Slider
+    Slider,Scroll,Loading
   }
 
 }

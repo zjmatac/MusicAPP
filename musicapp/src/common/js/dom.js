@@ -15,3 +15,14 @@ export  function hasClass(el ,className){
  return reg.test(el.className)
 
 }
+
+export  function getData(el,name,val){
+	const prefix='data-'
+	name= prefix+name
+	if(val){
+		return el.setAttribute(el,name)
+	}
+	else{
+		return el.getAttribute(name)
+	}
+}

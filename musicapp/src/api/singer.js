@@ -6,14 +6,14 @@ export function getSingerList() {
 
   const data = Object.assign({}, commonParams, {
     channel:'singer',
-	page:'list',
-	key:'all_all_all',
-	pagesize:100,
-	pagenum:1,
-	loginUin:0,
-	hostUin:0,
-	platform:'yqq',
-	needNewCode:0
+  	page:'list',
+  	key:'all_all_all',
+  	pagesize:100,
+  	pagenum:1,
+  	loginUin:0,
+  	hostUin:0,
+  	platform:'yqq',
+  	needNewCode:0
   })
 
   return jsonp(url, data, options)
